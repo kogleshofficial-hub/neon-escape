@@ -19,6 +19,6 @@ export default {
     }
     return nextWorker.fetch(request, env, ctx);
   },
-} satisfies ExportedHandler<Env>;
+};
 
 interface Env { ROOMS: DurableObjectNamespace<NeonRoom>; }
