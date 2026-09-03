@@ -5,7 +5,7 @@ import { NeonRoom } from './src/room';
 export { NeonRoom };
 
 export default {
-  async fetch(request: Request, env: Env, ctx: ExecutionContext) {
+  async fetch(request: Request, env: Env, ctx: any) {
     const url = new URL(request.url);
     if (url.pathname === '/ws') {
       if (request.headers.get('Upgrade') !== 'websocket') {
