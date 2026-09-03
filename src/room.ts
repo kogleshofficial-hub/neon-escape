@@ -1,3 +1,11 @@
+type DurableObjectState = {
+  storage: {
+    get<T>(key: string): Promise<T | undefined>;
+    put<T>(key: string, value: T): Promise<void>;
+  };
+  blockConcurrencyWhile<T>(callback: () => Promise<T>): Promise<T>;
+};
+
 type Character = 'runner' | 'phantom' | 'guardian';
 type Player = { id:string; name:string; character:Character; x:number; y:number; hp:number; maxHp:number; facingX:number; facingY:number; energy:number; score:number; alive:boolean; phaseUntil:number; attackUntil:number; lastInput:number; ws:WebSocket };
 type ClientMessage = {type:'join';name?:string;character?:Character}|{type:'input';dx:number;dy:number}|{type:'attack'}|{type:'phase'}|{type:'rematch'};
