@@ -1,4 +1,4 @@
-import { DurableObject } from '@cloudflare/workers-types';
+import { DurableObject } from 'cloudflare:workers';
 
 type Character = 'runner' | 'phantom' | 'guardian';
 type Player = { id:string; name:string; character:Character; x:number; y:number; hp:number; maxHp:number; facingX:number; facingY:number; energy:number; score:number; alive:boolean; phaseUntil:number; attackUntil:number; lastInput:number; ws:WebSocket };
