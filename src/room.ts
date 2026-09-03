@@ -1,5 +1,3 @@
-import { DurableObject } from 'cloudflare:workers';
-
 type Character = 'runner' | 'phantom' | 'guardian';
 type Player = { id:string; name:string; character:Character; x:number; y:number; hp:number; maxHp:number; facingX:number; facingY:number; energy:number; score:number; alive:boolean; phaseUntil:number; attackUntil:number; lastInput:number; ws:WebSocket };
 type ClientMessage = {type:'join';name?:string;character?:Character}|{type:'input';dx:number;dy:number}|{type:'attack'}|{type:'phase'}|{type:'rematch'};
@@ -8,7 +6,9 @@ const WIDTH=1200, HEIGHT=700, MAX_PLAYERS=2, ATTACK_RANGE=92, BASE_DAMAGE=24;
 const SPEED:{[key in Character]:number}={runner:7.2,phantom:6.2,guardian:5.6};
 const MAX_HP:{[key in Character]:number}={runner:100,phantom:90,guardian:120};
 
-export class NeonRoom extends DurableObject {
+export class NeonRoom {
+  private ctx:DurableObjectState;
+  private env:Env;
   private players=new Map<string,Player>();
   private started=false;
   private winner:string|null=null;
@@ -16,7 +16,8 @@ export class NeonRoom extends DurableObject {
   private lastBroadcast=0;
 
   constructor(ctx:DurableObjectState,env:Env){
-    super(ctx,env);
+    this.ctx=ctx;
+    this.env=env;
     this.ctx.blockConcurrencyWhile(async()=>{this.roomCode=(await this.ctx.storage.get<string>('roomCode'))??'';});
   }
 
