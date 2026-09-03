@@ -1,4 +1,7 @@
-import { DurableObject } from 'cloudflare:workers';
+import type { DurableObject } from 'cloudflare:workers';
+
+// Cloudflare's runtime provides the DurableObject base class at deploy time.
+// The type-only import keeps Next/Vercel from trying to bundle the runtime module.
 
 type Character = 'runner' | 'phantom' | 'guardian';
 type Player = { id:string; name:string; character:Character; x:number; y:number; hp:number; maxHp:number; facingX:number; facingY:number; energy:number; score:number; alive:boolean; phaseUntil:number; attackUntil:number; lastInput:number; ws:WebSocket };
