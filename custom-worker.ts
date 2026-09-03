@@ -4,8 +4,15 @@ import { NeonRoom } from './src/room';
 
 export { NeonRoom };
 
-export default {
-  async fetch(request: Request, env: Env, ctx: any) {
+interface Env { ROOMS: any; }
+
+type WorkerContext = {
+  waitUntil(promise: Promise<unknown>): void;
+  passThroughOnException(): void;
+};
+
+const worker = {
+  async fetch(request: Request, env: Env, ctx: WorkerContext): Promise<Response> {
     const url = new URL(request.url);
     if (url.pathname === '/ws') {
       if (request.headers.get('Upgrade') !== 'websocket') {
@@ -21,4 +28,4 @@ export default {
   },
 };
 
-interface Env { ROOMS: DurableObjectNamespace<NeonRoom>; }
+export default worker;
