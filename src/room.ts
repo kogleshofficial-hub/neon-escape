@@ -1,13 +1,6 @@
 // @ts-ignore Cloudflare provides this runtime-only module when deployed to Workers.
 import { DurableObject } from 'cloudflare:workers';
-
-type NeonRoomState = {
-  storage: {
-    get<T>(key: string): Promise<T | undefined>;
-    put<T>(key: string, value: T): Promise<void>;
-  };
-  blockConcurrencyWhile<T>(callback: () => Promise<T>): Promise<T>;
-};
+import type { DurableObjectState } from '@cloudflare/workers-types';
 
 type Character = 'runner' | 'phantom' | 'guardian';
 type Player = { id:string; name:string; character:Character; x:number; y:number; hp:number; maxHp:number; facingX:number; facingY:number; energy:number; score:number; alive:boolean; phaseUntil:number; attackUntil:number; lastInput:number; ws:WebSocket };
@@ -18,7 +11,7 @@ const SPEED:{[key in Character]:number}={runner:7.2,phantom:6.2,guardian:5.6};
 const MAX_HP:{[key in Character]:number}={runner:100,phantom:90,guardian:120};
 
 export class NeonRoom extends DurableObject {
-  private ctx:NeonRoomState;
+  private ctx:DurableObjectState;
   private env:Env;
   private players=new Map<string,Player>();
   private started=false;
@@ -26,7 +19,7 @@ export class NeonRoom extends DurableObject {
   private roomCode='';
   private lastBroadcast=0;
 
-  constructor(ctx:NeonRoomState,env:Env){
+  constructor(ctx:DurableObjectState,env:Env){
     super(ctx,env);
     this.ctx=ctx;
     this.env=env;
